@@ -11,19 +11,17 @@
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); /* Hafif bir degrade */
             margin: 0;
             padding: 0;
-            /* mobil cihazlarda tam viewport yüksekliğini almak için vh yerine % kullanabiliriz */
-            min-height: 100vh; /* Minimum ekran yüksekliği */
-            height: 100%; /* HTML yüksekliğini doldurur */
+            min-height: 100vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* İçeriği dikeyde ortalar */
+            justify-content: center;
             align-items: center;
-            overflow: hidden; /* Sayfa taşmasını engeller */
-            position: relative; /* İçindeki mutlak konumlandırılmış elementler için referans noktası */
-            box-sizing: border-box; /* padding'in genişliğe dahil olmasını sağlar */
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        /* Arka plan efekti için */
         body::before {
             content: '';
             position: absolute;
@@ -33,37 +31,37 @@
             height: 100%;
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
             animation: pulseBackground 10s infinite alternate;
-            z-index: -1; /* Arka planda kalmasını sağlar */
+            z-index: -1;
         }
 
         @keyframes pulseBackground {
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(1.1); opacity: 0.8; }
         }
-        
+
         h1 {
-            color: #d63031; /* Vurgulu kırmızı renk */
-            font-size: 3.5em; /* Daha büyük başlık */
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3); /* Daha belirgin gölge */
+            color: #d63031;
+            font-size: 3.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
             animation: fadeInDown 1.5s ease-out;
             text-transform: uppercase;
-            position: absolute; /* Sayfanın üstünde sabit dursun */
-            top: 50px; /* Üstten boşluk */
-            left: 50%; /* Yatayda ortalamak için başlangıç noktası */
-            transform: translateX(-50%); /* Kendi genişliğine göre tam ortala */
-            width: calc(100% - 40px); /* Ekranın kenarlarından 20px boşluk bırakarak genişlik */
-            max-width: 800px; /* Maksimum genişlik */
-            box-sizing: border-box; /* Padding genişliğe dahil */
-            padding: 0 20px; /* Kenarlara yapışmaması için padding */
-            z-index: 20; /* Butonların üzerinde görünmesini sağla */
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 800px;
+            box-sizing: border-box;
+            padding: 0 20px;
+            z-index: 20;
+            text-align: center; /* Metnin ortalanması için */
 
-            /* Mobil için başlık boyutu ayarı */
             @media (max-width: 768px) {
-                font-size: 2.5em; /* Daha küçük mobil ekranlar için */
-                top: 30px; /* Mobil üstten boşluğu azalt */
+                font-size: 2.5em;
+                top: 30px;
             }
             @media (max-width: 480px) {
-                font-size: 1.8em; /* Daha küçük mobil ekranlar için */
+                font-size: 1.8em;
                 top: 20px;
             }
         }
@@ -72,19 +70,17 @@
             from { opacity: 0; transform: translateY(-50px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .buttons {
             display: flex;
-            justify-content: center; /* Butonları yatayda ortalar */
-            align-items: center; /* Butonları dikeyde ortalar (eğer flex-direction column ise) */
-            /* position: relative;  Artık butonları doğrudan body'ye göre konumlandıracağız */
-            width: 100%; /* Tam genişlik */
-            max-width: 800px; /* Maksimum genişlik */
-            height: 200px; /* Butonlar için dikeyde yer ayırır */
-            margin-top: 100px; /* Başlıkla butonlar arasına boşluk */
-            box-sizing: border-box; /* Padding'in genişliğe dahil olmasını sağlar */
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            height: 200px;
+            margin-top: 100px;
+            box-sizing: border-box;
 
-            /* Mobil için margin ayarı */
             @media (max-width: 768px) {
                 margin-top: 60px;
                 height: 150px;
@@ -94,10 +90,10 @@
                 height: 120px;
             }
         }
-        
+
         #yes {
-            background-color: #fcefdc; /* Krem rengi */
-            color: #d63031; /* Yazı rengini vurgulu kırmızı */
+            background-color: #fcefdc;
+            color: #d63031;
             border: none;
             padding: 18px 40px;
             font-size: 20px;
@@ -105,30 +101,29 @@
             border-radius: 50px;
             transition: all 0.3s ease-in-out;
             box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-            position: absolute; /* Mutlak konumlandırma */
-            left: 20%; /* Sol kenara daha yakın */
-            transform: translateX(-50%); /* Kendi genişliğinin yarısı kadar sola kaydırarak hizala */
+            position: absolute;
+            left: 20%;
+            transform: translateX(-50%);
             z-index: 10;
 
-            /* Mobil için buton boyutu ayarı */
             @media (max-width: 768px) {
                 padding: 15px 30px;
                 font-size: 18px;
-                left: 25%; /* Mobil için daha merkezi */
+                left: 25%;
             }
             @media (max-width: 480px) {
                 padding: 12px 25px;
                 font-size: 16px;
-                left: 20%; /* Mobil için daha az yer kaplasın */
+                left: 20%;
             }
         }
-        
+
         #yes:hover {
-            transform: scale(1.15) translateX(-50%); /* Hover'da büyürken de ortalamayı koru */
-            background-color: #fae0c4; /* Hover'da daha koyu krem */
+            transform: scale(1.15) translateX(-50%);
+            background-color: #fae0c4;
             box-shadow: 0 12px 20px rgba(0,0,0,0.3);
         }
-        
+
         #no {
             background-color: #b2bec3;
             color: #444;
@@ -136,11 +131,10 @@
             padding: 15px 30px;
             font-size: 18px;
             border-radius: 50px;
-            position: absolute; 
+            position: absolute;
             z-index: 5;
             white-space: nowrap;
 
-            /* Mobil için buton boyutu ayarı */
             @media (max-width: 768px) {
                 padding: 12px 25px;
                 font-size: 16px;
@@ -154,17 +148,17 @@
 </head>
 <body>
     <h1>Beni affedebilecek misin?</h1>
-    
+
     <div class="buttons">
         <button id="yes">Lanet olsun affediyorum</button>
         <button id="no">Hayır</button>
     </div>
 
     <script>
-        // Sayfa tamamen yüklendiğinde JavaScript kodunu çalıştır
         document.addEventListener('DOMContentLoaded', () => {
             const noButton = document.getElementById('no');
             const yesButton = document.getElementById('yes');
+            const heading = document.querySelector('h1');
             const noMessages = [
                 "Hayır",
                 "Asla!",
@@ -175,85 +169,85 @@
                 "Hayır dedim!"
             ];
             let messageIndex = 0;
-
-            // Hayır butonunu klavye ile seçilemez yap
             noButton.tabIndex = -1;
 
-            // Butonun başlangıç konumunu ayarlayan fonksiyon
             function setInitialNoButtonPosition() {
-                // Dokümanın görünür alanını kullanıyoruz, bu genellikle daha doğru olur
                 const viewportWidth = document.documentElement.clientWidth;
                 const viewportHeight = document.documentElement.clientHeight;
-                
                 const buttonWidth = noButton.offsetWidth;
                 const buttonHeight = noButton.offsetHeight;
+                const initialRight = viewportWidth * 0.20;
+                const initialLeft = Math.max(0, viewportWidth - buttonWidth - initialRight);
+                const initialTop = Math.max(0, (viewportHeight / 2) - (buttonHeight / 2) + 50);
 
-                // Ekranın sağ kenarına %20 mesafede başlayacak şekilde hesaplama yapalım
-                const initialRight = viewportWidth * 0.20; 
-                // Sol konum: Toplam genişlik - buton genişliği - sağdan başlangıç boşluğu
-                const initialLeft = Math.max(0, viewportWidth - buttonWidth - initialRight); 
-                // Dikeyde ortadan 50px aşağı kaydır, başlık ve diğer içerikler için yer bırak
-                const initialTop = Math.max(0, (viewportHeight / 2) - (buttonHeight / 2) + 50); 
-                
                 noButton.style.left = `${initialLeft}px`;
                 noButton.style.top = `${initialTop}px`;
-                noButton.style.right = 'unset'; 
-                noButton.style.transform = 'none'; 
-                noButton.style.bottom = 'unset'; 
+                noButton.style.right = 'unset';
+                noButton.style.transform = 'none';
+                noButton.style.bottom = 'unset';
             }
 
-            // Sayfa yüklendiğinde ve pencere boyutu değiştiğinde başlangıç konumunu ayarla
             setInitialNoButtonPosition();
             window.addEventListener('resize', setInitialNoButtonPosition);
-            
-            // Mouse yaklaştığında (veya dokunmatik ekranda parmak üzerinde hareket ettiğinde) hareket ettir
-            noButton.addEventListener('mouseover', () => {
-                // Güvenli boşluk (padding)
-                const padding = 20; 
 
-                // Pencerenin mevcut görünür genişlik ve yüksekliğini alıyoruz.
+            noButton.addEventListener('mouseover', () => {
+                const padding = 20;
                 const viewportWidth = document.documentElement.clientWidth;
                 const viewportHeight = document.documentElement.clientHeight;
-
-                // Butonun güncel boyutlarını alıyoruz.
                 const noButtonRect = noButton.getBoundingClientRect();
                 const buttonWidth = noButtonRect.width;
                 const buttonHeight = noButtonRect.height;
+                const headingRect = heading.getBoundingClientRect();
 
-                // Butonun gidebileceği maksimum koordinatları hesaplıyoruz.
-                // Math.max(0, ...) ile negatif değerlerin önüne geçiyoruz.
-                // Her yönden (sol, sağ, üst, alt) padding kadar boşluk bırak
-                const maxX = Math.max(0, viewportWidth - buttonWidth - (padding * 2)); 
-                const maxY = Math.max(0, viewportHeight - buttonHeight - (padding * 2)); 
-                
-                // Rastgele yeni X ve Y koordinatları üretiyoruz.
-                // Üretilen değerler "padding" ile "maxX + padding" veya "maxY + padding" arasında olacaktır.
-                const x = Math.random() * maxX + padding; 
-                const y = Math.random() * maxY + padding;
-                
-                // Butonun pozisyonunu güncelle.
-                // CSS'teki transform'u sıfırlayarak sadece left/top ile kontrol sağlayın.
-                noButton.style.transform = 'none'; 
-                noButton.style.left = `${x}px`;
-                noButton.style.top = `${y}px`;
-                noButton.style.right = 'unset'; 
-                noButton.style.bottom = 'unset'; 
-            
-                // Metni değiştir
-                messageIndex = (messageIndex + 1) % noMessages.length;
-                noButton.textContent = noMessages[messageIndex];
+                let newX, newY;
+                let attempts = 0;
+                const maxAttempts = 100; // Sonsuz döngüyü önlemek için
+
+                do {
+                    const maxX = Math.max(0, viewportWidth - buttonWidth - (padding * 2));
+                    const maxY = Math.max(0, viewportHeight - buttonHeight - (padding * 2));
+                    newX = Math.random() * maxX + padding;
+                    newY = Math.random() * maxY + padding;
+                    attempts++;
+
+                    // Butonun başlıkla çakışıp çakışmadığını kontrol et
+                    const buttonLeft = newX;
+                    const buttonRight = newX + buttonWidth;
+                    const buttonTop = newY;
+                    const buttonBottom = newY + buttonHeight;
+
+                    const headingLeft = headingRect.left;
+                    const headingRight = headingRect.right;
+                    const headingTop = headingRect.top;
+                    const headingBottom = headingRect.bottom;
+
+                    // Çakışma durumu: Butonun herhangi bir kenarı başlığın kenarları arasında ise
+                    const isOverlapping = !(buttonRight < headingLeft ||
+                                            buttonLeft > headingRight ||
+                                            buttonBottom < headingTop ||
+                                            buttonTop > headingBottom);
+
+                    if (!isOverlapping) {
+                        break; // Çakışma yoksa döngüden çık
+                    }
+                } while (attempts < maxAttempts);
+
+                if (attempts < maxAttempts) {
+                    noButton.style.transform = 'none';
+                    noButton.style.left = `${newX}px`;
+                    noButton.style.top = `${newY}px`;
+                    noButton.style.right = 'unset';
+                    noButton.style.bottom = 'unset';
+
+                    messageIndex = (messageIndex + 1) % noMessages.length;
+                    noButton.textContent = noMessages [messageIndex];
+                } else {
+                    // Çok fazla denemeye rağmen uygun yer bulunamazsa (nadiren olur)
+                    console.warn("Başlık ile çakışmayan uygun pozisyon bulunamadı.");
+                    // Alternatif bir davranış sergilenebilir (örneğin butonu sabit bir yere taşımak)
+                }
             });
 
-            // Mobil cihazlarda 'touchmove' olayını da dinleyelim
-            noButton.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Varsayılan dokunma hareketini engelle
-                // 'mouseover' olayındaki logic'in aynısını burada da kullanabiliriz
-                // Ancak touchmove olayı sürekli tetiklendiği için performans sorunlarına yol açabilir.
-                // Bu yüzden sadece mouseover'ı bırakmak daha iyi olabilir veya throttle/debounce uygulamak gerekir.
-                // Şimdilik sadece 'mouseover' üzerinden ilerleyelim.
-            });
-            
-            // Evet butonuna basıldığında
             yesButton.addEventListener('click', () => {
                 alert('Her şey gerçekten çok güzel olacak ❤️');
             });
