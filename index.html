@@ -63,8 +63,8 @@
         .buttons {
             display: flex;
             justify-content: center; /* Butonları yatayda ortalar */
-            align-items: center; /* Butonları dikeyde ortalar (eğer flex-direction column ise) */
-            position: relative; /* İçindeki mutlak butonlar için referans noktası */
+            align-items: center; /* Butonları dikeyde ortalar */
+            /* position: relative;  Artık butonları doğrudan body'ye göre konumlandıracağız */
             width: 100%; /* Tam genişlik */
             max-width: 800px; /* Maksimum genişlik */
             height: 200px; /* Butonlar için dikeyde yer ayırır */
@@ -101,14 +101,10 @@
             padding: 15px 30px;
             font-size: 18px;
             border-radius: 50px;
-            position: absolute; /* Mutlak konumlandırma */
-            /* İlk başlangıç konumunu CSS ile veriyoruz, JS devralacak */
-            top: 50%; 
-            left: 50%;
-            transform: translate(-50%, 50px); /* İlk açılışta daha merkezi bir konum */
+            /* Bu butonun başlangıç konumunu da JavaScript'e bırakıyoruz */
+            position: absolute; 
             z-index: 5;
             white-space: nowrap;
-            /* Transition olmasın ki JS hemen konumu değiştirebilsin */
         }
     </style>
 </head>
@@ -138,6 +134,30 @@
 
             // Hayır butonunu klavye ile seçilemez yap
             noButton.tabIndex = -1;
+
+            // Butonun başlangıç konumunu ayarlayan fonksiyon
+            function setInitialNoButtonPosition() {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const buttonWidth = noButton.offsetWidth;
+                const buttonHeight = noButton.offsetHeight;
+
+                // Ekranın sağ kenarına %20 mesafede başlayacak şekilde hesaplama yapalım
+                // body'nin padding veya marginleri olmadığından emin olun
+                // Bu değerleri doğrudan piksel olarak ayarlayalım
+                const initialRight = windowWidth * 0.20; // Ekran genişliğinin %20'si
+                const initialLeft = windowWidth - buttonWidth - initialRight; // Sağdan 20% mesafede sol konum
+                const initialTop = (windowHeight / 2) - (buttonHeight / 2) + 50; // Dikeyde ortadan 50px aşağı kaydır
+
+                noButton.style.left = `${initialLeft}px`;
+                noButton.style.top = `${initialTop}px`;
+                noButton.style.right = 'unset'; // Önceki right ayarını kaldır
+                noButton.style.transform = 'none'; // Önceki transform ayarını kaldır
+            }
+
+            // Sayfa yüklendiğinde ve pencere boyutu değiştiğinde başlangıç konumunu ayarla
+            setInitialNoButtonPosition();
+            window.addEventListener('resize', setInitialNoButtonPosition);
             
             // Mouse yaklaştığında hareket ettir ve metni değiştir
             noButton.addEventListener('mouseover', () => {
@@ -149,16 +169,14 @@
                 const windowHeight = window.innerHeight;
 
                 // Butonun güncel boyutlarını alıyoruz.
-                // getBoundingClientRect() en güvenilir yöntemdir ve border/padding dahil gerçek boyutu verir.
                 const noButtonRect = noButton.getBoundingClientRect();
                 const buttonWidth = noButtonRect.width;
                 const buttonHeight = noButtonRect.height;
 
                 // Butonun gidebileceği maksimum koordinatları hesaplıyoruz.
-                // Bu değerler, butonun sağ veya alt kenarının pencere sınırını aşmamasını garanti eder.
-                // Math.max(0, ...) ile negatif değerlerin önüne geçiyoruz.
-                const maxX = Math.max(0, windowWidth - buttonWidth - (padding * 2));
-                const maxY = Math.max(0, windowHeight - buttonHeight - (padding * 2));
+                // Butonun sağ/alt kenarının pencere sınırını aşmamasını ve kenarlardan padding kadar uzak kalmasını garantiliyoruz.
+                const maxX = Math.max(0, windowWidth - buttonWidth - (padding * 2)); // Sol + Sağ padding
+                const maxY = Math.max(0, windowHeight - buttonHeight - (padding * 2)); // Üst + Alt padding
                 
                 // Rastgele yeni X ve Y koordinatları üretiyoruz.
                 // Üretilen değerler "padding" ile "maxX + padding" veya "maxY + padding" arasında olacaktır.
@@ -170,8 +188,8 @@
                 noButton.style.transform = 'none'; 
                 noButton.style.left = `${x}px`;
                 noButton.style.top = `${y}px`;
-                noButton.style.right = 'unset'; // Sağdan gelen bir ayar varsa onu da kaldırın
-                noButton.style.bottom = 'unset'; // Alttan gelen bir ayar varsa onu da kaldırın
+                noButton.style.right = 'unset'; 
+                noButton.style.bottom = 'unset'; 
             
                 // Metni değiştir
                 messageIndex = (messageIndex + 1) % noMessages.length;
