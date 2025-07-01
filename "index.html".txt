@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beni Affeder misin?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); /* Hafif bir degrade */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Taşmayı engeller */
+            position: relative;
+        }
+
+        /* Arka plan efekti için */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulseBackground 10s infinite alternate;
+        }
+
+        @keyframes pulseBackground {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        h1 {
+            color: #d63031; /* Daha canlı bir kırmızı */
+            margin-bottom: 60px; /* Daha fazla boşluk */
+            font-size: 3em; /* Daha büyük başlık */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Hafif gölge */
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Butonları dikeyde hizala */
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Buton alanı için maksimum genişlik */
+        }
+        
+        #yes {
+            background-color: #e84393; /* Daha pembe bir ton */
+            color: white;
+            border: none;
+            padding: 18px 40px; /* Daha büyük padding */
+            font-size: 20px; /* Daha büyük font */
+            cursor: pointer;
+            border-radius: 50px; /* Daha yuvarlak butonlar */
+            margin-right: 30px; /* Sağdan boşluk */
+            transition: all 0.3s ease-in-out; /* Daha yumuşak geçişler */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2); /* Hafif gölge */
+            position: relative;
+            z-index: 10;
+        }
+        
+        #yes:hover {
+            transform: scale(1.15); /* Daha fazla büyüme */
+            background-color: #d63031; /* Hover'da renk değişimi */
+            box-shadow: 0 12px 20px rgba(0,0,0,0.3);
+        }
+        
+        #no {
+            background-color: #b2bec3; /* Daha yumuşak gri */
+            color: #444;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            position: absolute; /* Mutlak konumlandırma */
+            left: 50%;
+            transform: translateX(100px); /* Başlangıçta daha sağda */
+            transition: all 0.3s ease; /* Tüm hareketler için yumuşak geçiş */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 5;
+            white-space: nowrap; /* Metnin tek satırda kalmasını sağlar */
+        }
+    </style>
+</head>
+<body>
+    <h1>Beni affeder misin?</h1>
+    
+    <div class="buttons">
+        <button id="yes">Lanet olsun affediyorum</button>
+        <button id="no">Hayır</button>
+    </div>
+
+    <script>
+        const noButton = document.getElementById('no');
+        const yesButton = document.getElementById('yes');
+        const noMessages = [
+            "Hayır",
+            "Asla!",
+            "İmkansız...",
+            "Deneme bile",
+            "Uzak dur!",
+            "Pes et",
+            "Hayır dedim!"
+        ];
+        let messageIndex = 0;
+
+        // Hayır butonunu klavye ile seçilemez yap
+        noButton.tabIndex = -1;
+        
+        // Mouse yaklaştığında hareket ettir ve metni değiştir
+        noButton.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - noButton.offsetWidth - 50); // Kenarlardan biraz boşluk bırak
+            const y = Math.random() * (window.innerHeight - noButton.offsetHeight - 50); // Kenarlardan biraz boşluk bırak
+            
+            noButton.style.position = 'absolute';
+            noButton.style.left = `${x}px`;
+            noButton.style.top = `${y}px`;
+            noButton.style.transform = 'none'; // Transform'ı sıfırla
+
+            // Metni değiştir
+            messageIndex = (messageIndex + 1) % noMessages.length;
+            noButton.textContent = noMessages[messageIndex];
+        });
+        
+        // Evet butonuna basıldığında
+        yesButton.addEventListener('click', () => {
+            alert('Her şey gerçekten çok güzel olacak ❤️');
+        });
+    </script>
+</body>
+</html>
