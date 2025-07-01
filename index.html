@@ -102,11 +102,13 @@
             font-size: 18px;
             border-radius: 50px;
             position: absolute; /* Mutlak konumlandırma */
-            right: 20%; /* Sağ kenara daha yakın */
-            transform: translateX(50%); /* Kendi genişliğinin yarısı kadar sağa kaydırarak hizala */
+            /* İlk başlangıç konumunu CSS ile veriyoruz, JS devralacak */
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, 50px); /* İlk açılışta daha merkezi bir konum */
             z-index: 5;
             white-space: nowrap;
-            /* İlk hareket etmeme sorununu çözmek için transition'ı kaldırmıştık, şimdi de eklemiyoruz */
+            /* Transition olmasın ki JS hemen konumu değiştirebilsin */
         }
     </style>
 </head>
@@ -146,28 +148,30 @@
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
 
-                // Butonun güncel genişlik ve yüksekliğini alıyoruz.
+                // Butonun güncel boyutlarını alıyoruz.
+                // getBoundingClientRect() en güvenilir yöntemdir ve border/padding dahil gerçek boyutu verir.
                 const noButtonRect = noButton.getBoundingClientRect();
                 const buttonWidth = noButtonRect.width;
                 const buttonHeight = noButtonRect.height;
 
                 // Butonun gidebileceği maksimum koordinatları hesaplıyoruz.
                 // Bu değerler, butonun sağ veya alt kenarının pencere sınırını aşmamasını garanti eder.
-                const maxX = windowWidth - buttonWidth - padding;
-                const maxY = windowHeight - buttonHeight - padding;
+                // Math.max(0, ...) ile negatif değerlerin önüne geçiyoruz.
+                const maxX = Math.max(0, windowWidth - buttonWidth - (padding * 2));
+                const maxY = Math.max(0, windowHeight - buttonHeight - (padding * 2));
                 
                 // Rastgele yeni X ve Y koordinatları üretiyoruz.
-                // Üretilen değerler 0 (sol/üst kenar) ile maxX/maxY (sağ/alt kenardan buton boyutu kadar içerisi) arasında olacaktır.
-                const x = Math.random() * maxX; 
-                const y = Math.random() * maxY;
+                // Üretilen değerler "padding" ile "maxX + padding" veya "maxY + padding" arasında olacaktır.
+                const x = Math.random() * maxX + padding; 
+                const y = Math.random() * maxY + padding;
                 
                 // Butonun pozisyonunu güncelle.
-                // Önceki tüm CSS konumlandırma (right, transform) ve JavaScript konumlandırma (left, top) etkilerini sıfırlıyoruz.
-                noButton.style.position = 'absolute'; // Her zaman mutlak konumlandırma
-                noButton.style.right = 'unset'; // CSS'ten gelen 'right' etkisini kaldır
-                noButton.style.transform = 'none'; // CSS'ten gelen 'transform' etkisini kaldır
-                noButton.style.left = `${x}px`; // Yeni rastgele 'left' değeri
-                noButton.style.top = `${y}px`;   // Yeni rastgele 'top' değeri
+                // CSS'teki transform'u sıfırlayarak sadece left/top ile kontrol sağlayın.
+                noButton.style.transform = 'none'; 
+                noButton.style.left = `${x}px`;
+                noButton.style.top = `${y}px`;
+                noButton.style.right = 'unset'; // Sağdan gelen bir ayar varsa onu da kaldırın
+                noButton.style.bottom = 'unset'; // Alttan gelen bir ayar varsa onu da kaldırın
             
                 // Metni değiştir
                 messageIndex = (messageIndex + 1) % noMessages.length;
