@@ -11,13 +11,13 @@
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); /* Hafif bir degrade */
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100vh; /* Tam ekran yüksekliği */
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Butonları dikeyde merkeze alır */
+            justify-content: center; /* İçeriği dikeyde ortalar */
             align-items: center;
             overflow: hidden; /* Sayfa taşmasını engeller */
-            position: relative; /* İçindeki absolut elementler için referans noktası */
+            position: relative; /* İçindeki mutlak konumlandırılmış elementler için referans noktası */
         }
 
         /* Arka plan efekti için */
@@ -30,6 +30,7 @@
             height: 100%;
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
             animation: pulseBackground 10s infinite alternate;
+            z-index: -1; /* Arka planda kalmasını sağlar */
         }
 
         @keyframes pulseBackground {
@@ -62,12 +63,13 @@
         .buttons {
             display: flex;
             justify-content: center; /* Butonları yatayda ortalar */
-            align-items: center; /* Butonları dikeyde ortalar */
-            position: relative; /* İçindeki absolut butonlar için referans noktası */
+            align-items: center; /* Butonları dikeyde ortalar (eğer flex-direction column ise) */
+            position: relative; /* İçindeki mutlak butonlar için referans noktası */
             width: 100%; /* Tam genişlik */
             max-width: 800px; /* Maksimum genişlik */
             height: 200px; /* Butonlar için dikeyde yer ayırır */
             margin-top: 100px; /* Başlıkla butonlar arasına boşluk */
+            box-sizing: border-box; /* Padding'in genişliğe dahil olmasını sağlar */
         }
         
         #yes {
@@ -117,63 +119,48 @@
     </div>
 
     <script>
-        const noButton = document.getElementById('no');
-        const yesButton = document.getElementById('yes');
-        const noMessages = [
-            "Hayır",
-            "Asla!",
-            "İmkansız...",
-            "Deneme bile",
-            "Uzak dur!",
-            "Pes et",
-            "Hayır dedim!"
-        ];
-        let messageIndex = 0;
+        // Sayfa tamamen yüklendiğinde JavaScript kodunu çalıştır
+        document.addEventListener('DOMContentLoaded', () => {
+            const noButton = document.getElementById('no');
+            const yesButton = document.getElementById('yes');
+            const noMessages = [
+                "Hayır",
+                "Asla!",
+                "İmkansız...",
+                "Deneme bile",
+                "Uzak dur!",
+                "Pes et",
+                "Hayır dedim!"
+            ];
+            let messageIndex = 0;
 
-        // Hayır butonunu klavye ile seçilemez yap
-        noButton.tabIndex = -1;
-        
-        // Mouse yaklaştığında hareket ettir ve metni değiştir
-        noButton.addEventListener('mouseover', () => {
-            // Güvenli boşluk (padding) ekledik, butonun kenarlara çok yapışmasını engeller
-            const padding = 20; 
-
-            // Tarayıcı penceresinin boyutlarını alıyoruz.
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-
-            // Butonun güncel boyutlarını alıyoruz, metin değişse bile bu doğru boyutu verir.
-            // getBoundingClientRect().width/height daha güvenilir bir yöntemdir.
-            const noButtonRect = noButton.getBoundingClientRect();
-            const buttonWidth = noButtonRect.width;
-            const buttonHeight = noButtonRect.height;
-
-            // Butonun hareket edebileceği maksimum X ve Y koordinatları
-            // Pencere boyutlarından butonun kendi boyutunu ve her iki kenardan da bırakılacak padding'i çıkarıyoruz
-            const maxX = windowWidth - buttonWidth - (padding * 2);
-            const maxY = windowHeight - buttonHeight - (padding * 2);
+            // Hayır butonunu klavye ile seçilemez yap
+            noButton.tabIndex = -1;
             
-            // Rastgele yeni X ve Y koordinatları
-            // Her zaman padding kadar içeriden başlamasını sağlıyoruz (min. padding, max. maxX + padding)
-            const x = Math.random() * maxX + padding; 
-            const y = Math.random() * maxY + padding;
-            
-            // Butonun pozisyonunu güncelle
-            // Önceki 'right' ve 'transform' değerlerini kesin olarak sıfırla, böylece sadece 'left' ve 'top' kontrol eder
-            noButton.style.right = 'unset'; 
-            noButton.style.transform = 'none'; 
-            noButton.style.left = `${x}px`;
-            noButton.style.top = `${y}px`;
-        
-            // Metni değiştir
-            messageIndex = (messageIndex + 1) % noMessages.length;
-            noButton.textContent = noMessages[messageIndex];
-        });
-        
-        // Evet butonuna basıldığında
-        yesButton.addEventListener('click', () => {
-            alert('Her şey gerçekten çok güzel olacak ❤️');
-        });
-    </script>
-</body>
-</html>
+            // Mouse yaklaştığında hareket ettir ve metni değiştir
+            noButton.addEventListener('mouseover', () => {
+                // Güvenli boşluk (padding)
+                const padding = 20; 
+
+                // Pencere boyutlarını alıyoruz.
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                // Butonun güncel boyutlarını alıyoruz. Metin değişiminden hemen sonra bu değerler daha doğru olur.
+                const noButtonRect = noButton.getBoundingClientRect();
+                const buttonWidth = noButtonRect.width;
+                const buttonHeight = noButtonRect.height;
+
+                // Butonun hareket edebileceği maksimum X ve Y koordinatları
+                // Pencere boyutlarından butonun kendi boyutunu ve her iki kenardan da bırakılacak padding'i çıkarıyoruz
+                const maxX = windowWidth - buttonWidth - (padding * 2);
+                const maxY = windowHeight - buttonHeight - (padding * 2);
+                
+                // Rastgele yeni X ve Y koordinatları
+                // Her zaman padding kadar içeriden başlamasını sağlıyoruz (min. padding, max. maxX + padding)
+                const x = Math.random() * maxX + padding; 
+                const y = Math.random() * maxY + padding;
+                
+                // Butonun pozisyonunu güncelle
+                // Önceki 'right' ve 'transform' değerlerini kesin olarak sıfırla, böylece sadece 'left' ve 'top' kontrol eder
+                noButton
