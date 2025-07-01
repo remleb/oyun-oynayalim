@@ -106,7 +106,8 @@
             transform: translateX(50%); /* Kendi genişliğinin yarısı kadar sağa kaydırarak hizala */
             z-index: 5;
             white-space: nowrap;
-            transition: all 0.3s ease; /* Hareketin yumuşak geçişi için */
+            /* İlk hareket etmeme sorununu çözmek için transition'ı kaldırdık */
+            /* transition: all 0.3s ease; */ 
         }
     </style>
 </head>
@@ -146,15 +147,16 @@
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
 
-                // Butonun güncel boyutlarını alıyoruz. Metin değişiminden hemen sonra bu değerler daha doğru olur.
+                // Butonun güncel boyutlarını alıyoruz. Bu her zaman en doğru boyutu verir.
                 const noButtonRect = noButton.getBoundingClientRect();
                 const buttonWidth = noButtonRect.width;
                 const buttonHeight = noButtonRect.height;
 
                 // Butonun hareket edebileceği maksimum X ve Y koordinatları
                 // Pencere boyutlarından butonun kendi boyutunu ve her iki kenardan da bırakılacak padding'i çıkarıyoruz
-                const maxX = windowWidth - buttonWidth - (padding * 2);
-                const maxY = windowHeight - buttonHeight - (padding * 2);
+                // max değerler asla negatif olmamalıdır
+                const maxX = Math.max(0, windowWidth - buttonWidth - (padding * 2));
+                const maxY = Math.max(0, windowHeight - buttonHeight - (padding * 2));
                 
                 // Rastgele yeni X ve Y koordinatları
                 // Her zaman padding kadar içeriden başlamasını sağlıyoruz (min. padding, max. maxX + padding)
@@ -163,4 +165,21 @@
                 
                 // Butonun pozisyonunu güncelle
                 // Önceki 'right' ve 'transform' değerlerini kesin olarak sıfırla, böylece sadece 'left' ve 'top' kontrol eder
-                noButton
+                noButton.style.right = 'unset'; 
+                noButton.style.transform = 'none'; 
+                noButton.style.left = `${x}px`;
+                noButton.style.top = `${y}px`;
+            
+                // Metni değiştir
+                messageIndex = (messageIndex + 1) % noMessages.length;
+                noButton.textContent = noMessages[messageIndex];
+            });
+            
+            // Evet butonuna basıldığında
+            yesButton.addEventListener('click', () => {
+                alert('Her şey gerçekten çok güzel olacak ❤️');
+            });
+        });
+    </script>
+</body>
+</html>
