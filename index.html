@@ -365,29 +365,45 @@
         noButton.addEventListener('mouseover', () => {
             escapeCount++;
             
-            // Buton boyutlarını al
-            const buttonRect = noButton.getBoundingClientRect();
-            const buttonWidth = buttonRect.width;
-            const buttonHeight = buttonRect.height;
-            
-            // Ekran sınırları içinde rastgele pozisyon (güvenli marjinler ile)
-            const margin = 30; // Kenarlardan minimum uzaklık
-            const maxX = window.innerWidth - buttonWidth - margin;
-            const maxY = window.innerHeight - buttonHeight - margin;
-            
-            // Minimum değerler
-            const minX = margin;
-            const minY = margin;
-            
-            // Rastgele pozisyon hesapla
-            const x = Math.random() * (maxX - minX) + minX;
-            const y = Math.random() * (maxY - minY) + minY;
-            
+            // Önce position'ı fixed yap ki doğru boyutları alabilelim
             noButton.style.position = 'fixed';
-            noButton.style.left = `${x}px`;
-            noButton.style.top = `${y}px`;
-            noButton.style.transform = 'none';
-            noButton.style.zIndex = '1000';
+            
+            // Bir frame bekle ki DOM güncellensin
+            requestAnimationFrame(() => {
+                // Buton boyutlarını al
+                const buttonRect = noButton.getBoundingClientRect();
+                const buttonWidth = buttonRect.width;
+                const buttonHeight = buttonRect.height;
+                
+                // Ekran boyutları
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                
+                // Güvenli marjin
+                const margin = 50;
+                
+                // Güvenli alan hesapla
+                const safeMaxX = screenWidth - buttonWidth - margin;
+                const safeMaxY = screenHeight - buttonHeight - margin;
+                const safeMinX = margin;
+                const safeMinY = margin;
+                
+                // Eğer güvenli alan çok küçükse merkeze koy
+                if (safeMaxX <= safeMinX || safeMaxY <= safeMinY) {
+                    noButton.style.left = (screenWidth - buttonWidth) / 2 + 'px';
+                    noButton.style.top = (screenHeight - buttonHeight) / 2 + 'px';
+                } else {
+                    // Rastgele pozisyon hesapla
+                    const x = Math.random() * (safeMaxX - safeMinX) + safeMinX;
+                    const y = Math.random() * (safeMaxY - safeMinY) + safeMinY;
+                    
+                    noButton.style.left = Math.floor(x) + 'px';
+                    noButton.style.top = Math.floor(y) + 'px';
+                }
+                
+                noButton.style.transform = 'none';
+                noButton.style.zIndex = '1000';
+            });
 
             // Mesajı değiştir
             messageIndex = (messageIndex + 1) % noMessages.length;
@@ -466,21 +482,21 @@
             noButton.blur();
         });
 
-        // Resize olayında parçacıkları yeniden konumlandır
+        // Resize olayında buton pozisyonunu kontrol et
         window.addEventListener('resize', () => {
             if (noButton.style.position === 'fixed') {
                 const buttonRect = noButton.getBoundingClientRect();
                 const buttonWidth = buttonRect.width;
                 const buttonHeight = buttonRect.height;
                 
-                const margin = 30;
+                const margin = 50;
                 const maxX = window.innerWidth - buttonWidth - margin;
                 const maxY = window.innerHeight - buttonHeight - margin;
                 
                 const currentX = parseInt(noButton.style.left);
                 const currentY = parseInt(noButton.style.top);
                 
-                // Sınırların dışındaysa düzelt
+                // Sınırların dışındaysa güvenli alana taşı
                 if (currentX > maxX) noButton.style.left = maxX + 'px';
                 if (currentY > maxY) noButton.style.top = maxY + 'px';
                 if (currentX < margin) noButton.style.left = margin + 'px';
