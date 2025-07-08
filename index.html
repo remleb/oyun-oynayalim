@@ -476,10 +476,12 @@
             }
         });
 
-        // Sayfa yüklendiğinde
-        window.addEventListener('load', () => {
-            createParticles();
-            
+       // Sayfa yüklendiğinde butonu ortala
+window.addEventListener('load', () => {
+    const container = document.querySelector('.buttons-container');
+    noButton.style.left = (container.offsetWidth/2 - noButton.offsetWidth/2) + 'px';
+    noButton.style.top = (container.offsetHeight/2 - noButton.offsetHeight/2) + 'px';
+});
             // Periyodik kalp oluşturma
             setInterval(createHeart, 3000);
         });
