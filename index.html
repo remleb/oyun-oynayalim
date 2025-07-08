@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Beni Affeder misin?</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -57,12 +57,6 @@ h1 {
     margin-bottom: 20px;
     text-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
-.buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
 button {
     border: none;
     cursor: pointer;
@@ -76,6 +70,10 @@ button {
     padding: 15px 30px;
     font-size: 16px;
     box-shadow: 0 10px 20px rgba(238,90,36,0.4);
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
 }
 #yes:hover { transform: scale(1.05); }
 #no {
@@ -85,12 +83,11 @@ button {
     font-size: 14px;
     box-shadow: 0 8px 20px rgba(9,132,227,0.3);
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 20px;
+    right: 20px;
     z-index: 100;
 }
-#no:hover { transform: scale(0.95) translate(-50%, -50%); }
+#no:hover { transform: scale(0.95); }
 .confetti {
     position: absolute;
     width: 10px; height: 10px;
@@ -141,10 +138,8 @@ button {
 <div id="hearts"></div>
 <div class="container">
     <h1>Beni affeder misin?</h1>
-    <div class="buttons">
-        <button id="yes">❤️ Artık önümüze bakalım</button>
-    </div>
 </div>
+<button id="yes">❤️ Artık önümüze bakalım</button>
 <button id="no">Hayır</button>
 <div id="modal" class="modal">
     <div class="modal-content">
