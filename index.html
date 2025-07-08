@@ -273,13 +273,24 @@
 
     <div class="container">
         <h1>Beni affeder misin?</h1>
-        
-        <div class="buttons">
-            <button id="yes">❤️ Artık önümüze bakalım</button>
-            <button id="no">Hayır</button>
-        </div>
+        <div class="buttons-container">
+    <div class="buttons">
+        <button id="yes">❤️ Artık önümüze bakalım</button>
+        <button id="no">Hayır</button>
     </div>
+</div>
+.buttons-container {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  margin-top: 20px;
+  overflow: hidden; /* Butonun taşmasını engeller */
+}
 
+#no {
+  position: absolute !important; /* Fixed yerine absolute */
+  transition: all 0.5s ease;
+}
     <!-- Başarı modalı -->
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -362,44 +373,37 @@
         }
 
         // Hayır butonunu hareket ettir
-      noButton.addEventListener('mouseover', () => {
+    noButton.addEventListener('mouseover', () => {
     escapeCount++;
     
-    // Butonun gerçek boyutlarını al
     const buttonRect = noButton.getBoundingClientRect();
-    const buttonWidth = buttonRect.width;
-    const buttonHeight = buttonRect.height;
+    const containerRect = document.querySelector('.buttons-container').getBoundingClientRect();
     
-    // Viewport boyutları
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const minX = 0;
+    const minY = 0;
+    const maxX = containerRect.width - buttonRect.width;
+    const maxY = containerRect.height - buttonRect.height;
     
-    // Güvenli marjinler
-    const margin = 20;
+    const currentX = parseInt(noButton.style.left) || 0;
+    const currentY = parseInt(noButton.style.top) || 0;
     
-    // Maksimum ve minimum pozisyonları hesapla
-    const minX = margin;
-    const minY = margin;
-    const maxX = viewportWidth - buttonWidth - margin;
-    const maxY = viewportHeight - buttonHeight - margin;
+    const moveDistance = 100;
+    const newX = Math.max(minX, Math.min(
+        currentX + (Math.random() > 0.5 ? moveDistance : -moveDistance),
+        maxX
+    ));
+    const newY = Math.max(minY, Math.min(
+        currentY + (Math.random() > 0.5 ? moveDistance : -moveDistance),
+        maxY
+    ));
     
-    // Rastgele pozisyon üret (güvenli alan içinde)
-    let x, y;
+    noButton.style.left = newX + 'px';
+    noButton.style.top = newY + 'px';
+    noButton.textContent = noMessages[escapeCount % noMessages.length];
     
-    // Eğer buton zaten fixed pozisyondaysa, mevcut konumunu al
-    if (noButton.style.position === 'fixed') {
-        const currentX = parseInt(noButton.style.left) || minX;
-        const currentY = parseInt(noButton.style.top) || minY;
-        
-        // Mevcut konumdan belirli bir mesafe uzakta yeni konum belirle
-        const moveDistance = 100; // Butonun her seferinde hareket edeceği mesafe
-        x = Math.max(minX, Math.min(currentX + (Math.random() > 0.5 ? moveDistance : -moveDistance), maxX));
-        y = Math.max(minY, Math.min(currentY + (Math.random() > 0.5 ? moveDistance : -moveDistance), maxY));
-    } else {
-        // İlk hareket için rastgele konum
-        x = minX + Math.random() * (maxX - minX);
-        y = minY + Math.random() * (maxY - minY);
-    }
+    if (escapeCount % 3 === 0) createHeart();
+    if (navigator.vibrate) navigator.vibrate(50);
+});
     
     // Sınırları tekrar kontrol et
     x = Math.max(minX, Math.min(x, maxX));
@@ -476,12 +480,10 @@
             }
         });
 
-       // Sayfa yüklendiğinde butonu ortala
-window.addEventListener('load', () => {
-    const container = document.querySelector('.buttons-container');
-    noButton.style.left = (container.offsetWidth/2 - noButton.offsetWidth/2) + 'px';
-    noButton.style.top = (container.offsetHeight/2 - noButton.offsetHeight/2) + 'px';
-});
+        // Sayfa yüklendiğinde
+        window.addEventListener('load', () => {
+            createParticles();
+            
             // Periyodik kalp oluşturma
             setInterval(createHeart, 3000);
         });
@@ -492,28 +494,25 @@ window.addEventListener('load', () => {
             noButton.blur();
         });
 
-        window.addEventListener('resize', () => {
-    if (noButton.style.position === 'fixed') {
-        const buttonRect = noButton.getBoundingClientRect();
-        const buttonWidth = buttonRect.width;
-        const buttonHeight = buttonRect.height;
-        const margin = 20;
-        
-        const maxX = window.innerWidth - buttonWidth - margin;
-        const maxY = window.innerHeight - buttonHeight - margin;
-        const minX = margin;
-        const minY = margin;
-        
-        const currentX = parseInt(noButton.style.left) || 0;
-        const currentY = parseInt(noButton.style.top) || 0;
-        
-        // Sınırların dışındaysa güvenli alana taşı
-        const safeX = Math.max(minX, Math.min(currentX, maxX));
-        const safeY = Math.max(minY, Math.min(currentY, maxY));
-        
-        noButton.style.left = safeX + 'px';
-        noButton.style.top = safeY + 'px';
-    }
+      window.addEventListener('resize', () => {
+    const buttonRect = noButton.getBoundingClientRect();
+    const containerRect = document.querySelector('.buttons-container').getBoundingClientRect();
+    
+    const maxX = containerRect.width - buttonRect.width;
+    const maxY = containerRect.height - buttonRect.height;
+    
+    const currentX = parseInt(noButton.style.left) || 0;
+    const currentY = parseInt(noButton.style.top) || 0;
+    
+    noButton.style.left = Math.min(currentX, maxX) + 'px';
+    noButton.style.top = Math.min(currentY, maxY) + 'px';
+});
+
+// Sayfa yüklendiğinde butonu ortala
+window.addEventListener('load', () => {
+    const container = document.querySelector('.buttons-container');
+    noButton.style.left = (container.offsetWidth/2 - noButton.offsetWidth/2) + 'px';
+    noButton.style.top = (container.offsetHeight/2 - noButton.offsetHeight/2) + 'px';
 });
     </script>
 </body>
