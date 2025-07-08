@@ -13,6 +13,7 @@ body {
     overflow: hidden;
     position: relative;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -57,12 +58,19 @@ h1 {
     margin-bottom: 20px;
     text-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
+.button-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 button {
     border: none;
     cursor: pointer;
     border-radius: 50px;
     font-weight: 600;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
 }
 #yes {
     background: linear-gradient(135deg, #ff6b6b, #ee5a24);
@@ -70,10 +78,6 @@ button {
     padding: 15px 30px;
     font-size: 16px;
     box-shadow: 0 10px 20px rgba(238,90,36,0.4);
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 100;
 }
 #yes:hover { transform: scale(1.05); }
 #no {
@@ -82,10 +86,6 @@ button {
     padding: 12px 25px;
     font-size: 14px;
     box-shadow: 0 8px 20px rgba(9,132,227,0.3);
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 100;
 }
 #no:hover { transform: scale(0.95); }
 .confetti {
@@ -138,9 +138,11 @@ button {
 <div id="hearts"></div>
 <div class="container">
     <h1>Beni affeder misin?</h1>
+    <div class="button-group">
+        <button id="yes">❤️ Artık önümüze bakalım</button>
+        <button id="no">Hayır</button>
+    </div>
 </div>
-<button id="yes">❤️ Artık önümüze bakalım</button>
-<button id="no">Hayır</button>
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2>🎉 Yaşasın!</h2>
@@ -154,6 +156,7 @@ const yesButton = document.getElementById('yes');
 const modal = document.getElementById('modal');
 const noMessages = ["Hayır","Asla!","İmkansız...","Deneme bile","Uzak dur!","Pes et","Hayır dedim!","Nope!","Olmaz!","Düşünme bile!"];
 let escapeCount = 0;
+let yesScale = 1;
 
 function createParticles(){
     const container=document.getElementById('particles');
@@ -196,9 +199,15 @@ noButton.addEventListener('mouseover', ()=>{
     const maxY = window.innerHeight - buttonRect.height;
     const newX = Math.random() * maxX;
     const newY = Math.random() * maxY;
+    noButton.style.position = 'fixed';
     noButton.style.left = newX + 'px';
     noButton.style.top = newY + 'px';
     noButton.textContent = noMessages[escapeCount % noMessages.length];
+
+    // Evet butonunu her "no" üzerine gelindiğinde büyüt
+    yesScale += 0.05;
+    yesButton.style.transform = `scale(${yesScale})`;
+
     if(escapeCount % 3 === 0) createHeart();
     if(navigator.vibrate) navigator.vibrate(50);
 });
