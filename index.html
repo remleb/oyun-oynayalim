@@ -362,67 +362,71 @@
         }
 
         // Hayır butonunu hareket ettir
-        noButton.addEventListener('mouseover', () => {
-            escapeCount++;
-            
-            // Container'ı al
-            const container = document.querySelector('.container');
-            const containerRect = container.getBoundingClientRect();
-            
-            // Buton boyutunu al (sabit değerler kullanarak daha güvenli)
-            const buttonWidth = 120; // Yaklaşık buton genişliği
-            const buttonHeight = 50;  // Yaklaşık buton yüksekliği
-            
-            // Viewport sınırları
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            // Çok güvenli marjinler
-            const margin = 80;
-            
-            // Güvenli alan hesapla
-            const minX = margin;
-            const minY = margin;
-            const maxX = viewportWidth - buttonWidth - margin;
-            const maxY = viewportHeight - buttonHeight - margin;
-            
-            // Eğer güvenli alan yeterli değilse, container'ın içinde rastgele yer seç
-            let x, y;
-            if (maxX <= minX || maxY <= minY) {
-                // Çok küçük ekranlar için container içinde pozisyon
-                x = containerRect.left + Math.random() * (containerRect.width - buttonWidth);
-                y = containerRect.top + Math.random() * (containerRect.height - buttonHeight);
-            } else {
-                // Normal ekranlar için güvenli rastgele pozisyon
-                x = minX + Math.random() * (maxX - minX);
-                y = minY + Math.random() * (maxY - minY);
-            }
-            
-            // Sınırları tekrar kontrol et (double check)
-            x = Math.max(minX, Math.min(x, maxX));
-            y = Math.max(minY, Math.min(y, maxY));
-            
-            // Butonu hareket ettir
-            noButton.style.position = 'fixed';
-            noButton.style.left = Math.floor(x) + 'px';
-            noButton.style.top = Math.floor(y) + 'px';
-            noButton.style.transform = 'none';
-            noButton.style.zIndex = '1000';
+      noButton.addEventListener('mouseover', () => {
+    escapeCount++;
+    
+    // Butonun gerçek boyutlarını al
+    const buttonRect = noButton.getBoundingClientRect();
+    const buttonWidth = buttonRect.width;
+    const buttonHeight = buttonRect.height;
+    
+    // Viewport boyutları
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Güvenli marjinler
+    const margin = 20;
+    
+    // Maksimum ve minimum pozisyonları hesapla
+    const minX = margin;
+    const minY = margin;
+    const maxX = viewportWidth - buttonWidth - margin;
+    const maxY = viewportHeight - buttonHeight - margin;
+    
+    // Rastgele pozisyon üret (güvenli alan içinde)
+    let x, y;
+    
+    // Eğer buton zaten fixed pozisyondaysa, mevcut konumunu al
+    if (noButton.style.position === 'fixed') {
+        const currentX = parseInt(noButton.style.left) || minX;
+        const currentY = parseInt(noButton.style.top) || minY;
+        
+        // Mevcut konumdan belirli bir mesafe uzakta yeni konum belirle
+        const moveDistance = 100; // Butonun her seferinde hareket edeceği mesafe
+        x = Math.max(minX, Math.min(currentX + (Math.random() > 0.5 ? moveDistance : -moveDistance), maxX));
+        y = Math.max(minY, Math.min(currentY + (Math.random() > 0.5 ? moveDistance : -moveDistance), maxY));
+    } else {
+        // İlk hareket için rastgele konum
+        x = minX + Math.random() * (maxX - minX);
+        y = minY + Math.random() * (maxY - minY);
+    }
+    
+    // Sınırları tekrar kontrol et
+    x = Math.max(minX, Math.min(x, maxX));
+    y = Math.max(minY, Math.min(y, maxY));
+    
+    // Butonu hareket ettir
+    noButton.style.position = 'fixed';
+    noButton.style.left = Math.floor(x) + 'px';
+    noButton.style.top = Math.floor(y) + 'px';
+    noButton.style.transform = 'none';
+    noButton.style.transition = 'left 0.3s ease, top 0.3s ease'; // Daha smooth hareket
+    noButton.style.zIndex = '1000';
 
-            // Mesajı değiştir
-            messageIndex = (messageIndex + 1) % noMessages.length;
-            noButton.textContent = noMessages[messageIndex];
-            
-            // Her 3 kaçışta bir kalp oluştur
-            if (escapeCount % 3 === 0) {
-                createHeart();
-            }
-            
-            // Titreşim efekti (mobile için)
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-        });
+    // Mesajı değiştir
+    messageIndex = (messageIndex + 1) % noMessages.length;
+    noButton.textContent = noMessages[messageIndex];
+    
+    // Her 3 kaçışta bir kalp oluştur
+    if (escapeCount % 3 === 0) {
+        createHeart();
+    }
+    
+    // Titreşim efekti (mobile için)
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
+});
 
         // Hayır butonuna tıklama engeli
         noButton.addEventListener('click', (e) => {
@@ -486,29 +490,29 @@
             noButton.blur();
         });
 
-        // Resize olayında buton pozisyonunu kontrol et
         window.addEventListener('resize', () => {
-            if (noButton.style.position === 'fixed') {
-                const buttonWidth = 120;
-                const buttonHeight = 50;
-                const margin = 80;
-                
-                const maxX = window.innerWidth - buttonWidth - margin;
-                const maxY = window.innerHeight - buttonHeight - margin;
-                const minX = margin;
-                const minY = margin;
-                
-                const currentX = parseInt(noButton.style.left) || 0;
-                const currentY = parseInt(noButton.style.top) || 0;
-                
-                // Sınırların dışındaysa güvenli alana taşı
-                const safeX = Math.max(minX, Math.min(currentX, maxX));
-                const safeY = Math.max(minY, Math.min(currentY, maxY));
-                
-                noButton.style.left = safeX + 'px';
-                noButton.style.top = safeY + 'px';
-            }
-        });
+    if (noButton.style.position === 'fixed') {
+        const buttonRect = noButton.getBoundingClientRect();
+        const buttonWidth = buttonRect.width;
+        const buttonHeight = buttonRect.height;
+        const margin = 20;
+        
+        const maxX = window.innerWidth - buttonWidth - margin;
+        const maxY = window.innerHeight - buttonHeight - margin;
+        const minX = margin;
+        const minY = margin;
+        
+        const currentX = parseInt(noButton.style.left) || 0;
+        const currentY = parseInt(noButton.style.top) || 0;
+        
+        // Sınırların dışındaysa güvenli alana taşı
+        const safeX = Math.max(minX, Math.min(currentX, maxX));
+        const safeY = Math.max(minY, Math.min(currentY, maxY));
+        
+        noButton.style.left = safeX + 'px';
+        noButton.style.top = safeY + 'px';
+    }
+});
     </script>
 </body>
 </html>
